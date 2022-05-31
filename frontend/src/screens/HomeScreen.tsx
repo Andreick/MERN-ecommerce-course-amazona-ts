@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
-import logger from 'use-reducer-logger';
 import Product from '../interfaces/Product';
 
 const initialState = {
@@ -28,7 +27,7 @@ const reducer = (state: typeof initialState, action: FetchProductsAction) => {
 
 export default function HomeScreen() {
   const [{ loading, error, products }, dispatch] = useReducer(
-    logger(reducer),
+    reducer,
     initialState
   );
 
