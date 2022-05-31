@@ -4,7 +4,7 @@ import sampleData from './sampleData';
 const app = express();
 
 app.get('/api/products', (req, res) => {
-  res.send(sampleData);
+  res.send(sampleData.products);
 });
 
 const port = process.env.PORT || 5000;
