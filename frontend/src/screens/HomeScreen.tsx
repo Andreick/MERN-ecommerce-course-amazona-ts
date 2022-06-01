@@ -2,8 +2,11 @@ import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
-import ProductComponent from '../components/Product';
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
+import ProductCard from '../components/ProductCard';
 import Product from '../interfaces/Product';
+import getError from '../utils/ErrorUtils';
 
 const initialState = {
   products: Array<Product>(),
@@ -40,11 +43,7 @@ export default function HomeScreen() {
         const result = await axios.get('/api/products');
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {
-        if (err instanceof Error) {
-          dispatch({ type: 'FETCH_FAIL', payload: err.message });
-        } else {
-          console.error(err);
-        }
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
     fetchData();
@@ -57,14 +56,14 @@ export default function HomeScreen() {
       </Helmet>
       <h1>Featured Products</h1>
       {loading ? (
-        <div>Loading...</div>
+        <LoadingBox />
       ) : error ? (
-        <div>Error...</div>
+        <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Row>
           {products.map((product) => (
             <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
-              <ProductComponent product={product} />
+              <ProductCard product={product} />
             </Col>
           ))}
         </Row>

@@ -5,7 +5,7 @@ import Rating from './Rating';
 
 type ProductProps = { product: Product };
 
-export default function ProductComponent({ product }: ProductProps) {
+export default function ProductCard({ product }: ProductProps) {
   return (
     <Card>
       <Link to={`/products/${product.slug}`}>
