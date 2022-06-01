@@ -41,7 +41,7 @@ export default function ProductDetailsScreen() {
   );
   const {
     state: { cart },
-    dispatch: storeDispatch,
+    addOrUpdateCartItemHandler,
   } = useContext(Store);
 
   useEffect(() => {
@@ -61,15 +61,7 @@ export default function ProductDetailsScreen() {
     if (!product) return;
     const existItem = cart.cartItems.find((item) => item._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
-    if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
-      return;
-    }
-    storeDispatch({
-      type: 'CART_ADD_ITEM',
-      payload: { ...product, quantity },
-    });
+    addOrUpdateCartItemHandler(product, quantity);
     navigate('/cart');
   };
 
