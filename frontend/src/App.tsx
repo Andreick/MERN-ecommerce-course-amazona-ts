@@ -6,6 +6,7 @@ import Store from './context/Store';
 import CartScreen from './screens/CartScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductDetaisScreen';
+import SigninScreen from './screens/SigninScreen';
 
 function App() {
   const {
@@ -43,6 +44,7 @@ function App() {
               <Route path="/" element={<HomeScreen />}></Route>
               <Route path="/products/:slug" element={<ProductScreen />}></Route>
               <Route path="/cart" element={<CartScreen />}></Route>
+              <Route path="/signin" element={<SigninScreen />}></Route>
             </Routes>
           </Container>
         </main>
