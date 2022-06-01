@@ -1,5 +1,18 @@
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import express from 'express';
 import sampleData from './sampleData';
+
+dotenv.config();
+
+mongoose
+  .connect(process.env.DB_URI ?? '')
+  .then(() => {
+    console.info('connected to db');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 const app = express();
 
@@ -29,7 +42,7 @@ app.get('/api/products/:id', (req, res) => {
   res.send(product);
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT ?? 5000;
 
 app.listen(port, () => {
   console.info(`server at http://localhost:${port}`);
