@@ -1,4 +1,5 @@
 export default interface Product {
+  _id: string;
   name: string;
   slug: string;
   category: string;
@@ -9,4 +10,5 @@ export default interface Product {
   rating: number;
   numReviews: number;
   description: string;
+  quantity?: number;
 }

@@ -3,6 +3,7 @@ import Product from './interfaces/Product';
 const sampleData = {
   products: [
     {
+      _id: '1',
       name: 'Nike Slim shirt',
       slug: 'nike-slim-shirt',
       category: 'Shirts',
@@ -15,6 +16,7 @@ const sampleData = {
       description: 'high quality shirt',
     },
     {
+      _id: '2',
       name: 'Adidas Fit Shirt',
       slug: 'adidas-fit-shirt',
       category: 'Shirts',
@@ -27,6 +29,7 @@ const sampleData = {
       description: 'high quality product',
     },
     {
+      _id: '3',
       name: 'Nike Slim Pant',
       slug: 'nike-slim-pant',
       category: 'Pants',
@@ -39,6 +42,7 @@ const sampleData = {
       description: 'high quality product',
     },
     {
+      _id: '4',
       name: 'Adidas Fit Pant',
       slug: 'adidas-fit-pant',
       category: 'Pants',

@@ -18,6 +18,17 @@ app.get('/api/products/slug/:slug', (req, res) => {
   res.send(product);
 });
 
+app.get('/api/products/:id', (req, res) => {
+  const product = sampleData.products.find(
+    (product) => product._id === req.params.id
+  );
+  if (!product) {
+    res.status(404).send({ message: 'Product Not Found' });
+    return;
+  }
+  res.send(product);
+});
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {

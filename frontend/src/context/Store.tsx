@@ -15,13 +15,19 @@ const Store = createContext<{ state: State; dispatch: React.Dispatch<Action> }>(
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'CART_ADD_ITEM':
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          cartItems: [...state.cart.cartItems, action.payload],
-        },
-      };
+      const newItem = action.payload;
+      const cartItems = state.cart.cartItems;
+      const existItemIndex = cartItems.findIndex(
+        (item) => item._id === newItem._id
+      );
+      let newCartItems: typeof cartItems;
+      if (existItemIndex === -1) {
+        newCartItems = [...cartItems, newItem];
+      } else {
+        newCartItems = Array.from(cartItems);
+        newCartItems[existItemIndex] = newItem;
+      }
+      return { ...state, cart: { ...state.cart, cartItems: newCartItems } };
   }
 };
 
