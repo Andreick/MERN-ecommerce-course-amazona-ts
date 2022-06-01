@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
-import { Link } from 'react-router-dom';
+import { Col, Row } from 'react-bootstrap';
+import ProductComponent from '../components/Product';
 import Product from '../interfaces/Product';
 
 const initialState = {
@@ -51,28 +52,19 @@ export default function HomeScreen() {
   return (
     <div>
       <h1>Featured Products</h1>
-      <div className="products">
+      <div>
         {loading ? (
           <div>Loading...</div>
         ) : error ? (
           <div>Error...</div>
         ) : (
-          products.map((product) => (
-            <div className="product" key={product.slug}>
-              <Link to={`/products/${product.slug}`}>
-                <img src={product.image} alt={product.name}></img>
-              </Link>
-              <div className="product-info">
-                <Link to={`/products/${product.slug}`}>
-                  <p>{product.name}</p>
-                </Link>
-                <p>
-                  <strong>${product.price}</strong>
-                </p>
-                <button>Add to cart</button>
-              </div>
-            </div>
-          ))
+          <Row>
+            {products.map((product) => (
+              <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+                <ProductComponent product={product} />
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </div>
