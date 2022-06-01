@@ -10,5 +10,4 @@ export default interface Product {
   rating: number;
   numReviews: number;
   description: string;
-  quantity?: number;
 }

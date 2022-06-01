@@ -1,10 +1,10 @@
 import { createContext, ReactNode, useReducer } from 'react';
 import Cart from '../interfaces/Cart';
-import Product from '../interfaces/Product';
+import CartItem from '../interfaces/CartItem';
 
 type State = { cart: Cart };
 
-type Action = { type: 'CART_ADD_ITEM'; payload: Product };
+type Action = { type: 'CART_ADD_ITEM'; payload: CartItem };
 
 const initialState: State = { cart: { cartItems: [] } };
 

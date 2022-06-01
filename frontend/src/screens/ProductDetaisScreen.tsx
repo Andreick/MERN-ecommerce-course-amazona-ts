@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Rating from '../components/Rating';
@@ -33,6 +33,7 @@ const reducer = (state: typeof initialState, action: FetchProductsAction) => {
 };
 
 export default function ProductDetailsScreen() {
+  const navigate = useNavigate();
   const { slug } = useParams();
   const [{ loading, error, product }, dispatch] = useReducer(
     reducer,
@@ -59,7 +60,7 @@ export default function ProductDetailsScreen() {
   const addToCartHandler = async () => {
     if (!product) return;
     const existItem = cart.cartItems.find((item) => item._id === product._id);
-    const quantity = existItem?.quantity ? existItem.quantity + 1 : 1;
+    const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
       window.alert('Sorry. Product is out of stock');
@@ -69,6 +70,7 @@ export default function ProductDetailsScreen() {
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity },
     });
+    navigate('/cart');
   };
 
   return loading ? (
