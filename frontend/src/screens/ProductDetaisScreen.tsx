@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { useEffect, useReducer } from 'react';
+import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Rating from '../components/Rating';
+import Store from '../context/Store';
 import Product from '../interfaces/Product';
 import getError from '../utils/ErrorUtils';
 
@@ -37,6 +38,7 @@ export default function ProductDetailsScreen() {
     reducer,
     initialState
   );
+  const { state, dispatch: storeDispatch } = useContext(Store);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,10 @@ export default function ProductDetailsScreen() {
     };
     fetchData();
   }, [slug]);
+
+  const addToCartHandler = () => {
+    if (product) storeDispatch({ type: 'CART_ADD_ITEM', payload: product });
+  };
 
   return loading ? (
     <LoadingBox />
@@ -108,7 +114,9 @@ export default function ProductDetailsScreen() {
                 {product.countInStock > 0 && (
                   <ListGroup.Item>
                     <div className="d-grid">
-                      <Button variant="primary">Add to Cart</Button>
+                      <Button variant="primary" onClick={addToCartHandler}>
+                        Add to Cart
+                      </Button>
                     </div>
                   </ListGroup.Item>
                 )}
@@ -119,6 +127,6 @@ export default function ProductDetailsScreen() {
       </Row>
     </div>
   ) : (
-    <div>Error...</div>
+    <MessageBox variant="danger">Error</MessageBox>
   );
 }
