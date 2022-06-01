@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { Helmet } from 'react-helmet-async';
 import ProductComponent from '../components/Product';
 import Product from '../interfaces/Product';
 
@@ -51,22 +52,23 @@ export default function HomeScreen() {
 
   return (
     <div>
+      <Helmet>
+        <title>Amazona</title>
+      </Helmet>
       <h1>Featured Products</h1>
-      <div>
-        {loading ? (
-          <div>Loading...</div>
-        ) : error ? (
-          <div>Error...</div>
-        ) : (
-          <Row>
-            {products.map((product) => (
-              <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
-                <ProductComponent product={product} />
-              </Col>
-            ))}
-          </Row>
-        )}
-      </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error...</div>
+      ) : (
+        <Row>
+          {products.map((product) => (
+            <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+              <ProductComponent product={product} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 }

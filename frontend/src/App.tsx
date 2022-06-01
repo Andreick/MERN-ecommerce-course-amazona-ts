@@ -2,7 +2,7 @@ import { Container, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
-import ProductListScreen from './screens/ProductListScreen';
+import ProductScreen from './screens/ProductDetaisScreen';
 
 function App() {
   return (
@@ -18,13 +18,10 @@ function App() {
           </Navbar>
         </header>
         <main>
-          <Container>
+          <Container className="mt-3">
             <Routes>
               <Route path="/" element={<HomeScreen />}></Route>
-              <Route
-                path="/products/:slug"
-                element={<ProductListScreen />}
-              ></Route>
+              <Route path="/products/:slug" element={<ProductScreen />}></Route>
             </Routes>
           </Container>
         </main>
