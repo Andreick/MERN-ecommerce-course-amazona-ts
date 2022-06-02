@@ -1,15 +1,21 @@
 import axios from 'axios';
 import { createContext, ReactNode, useReducer } from 'react';
+import { toast } from 'react-toastify';
 import Cart from '../interfaces/Cart';
 import CartItem from '../interfaces/CartItem';
 import Product from '../interfaces/Product';
+import User from '../interfaces/User';
+import getError from '../utils/ErrorUtils';
 
-type State = { cart: Cart };
+type State = { cart: Cart; user: User | null };
 
-type Action = {
-  type: 'CART_ADD_OR_UPDATE_ITEM' | 'CART_REMOVE_ITEM';
-  payload: CartItem;
-};
+type Action =
+  | {
+      type: 'CART_ADD_OR_UPDATE_ITEM' | 'CART_REMOVE_ITEM';
+      payload: CartItem;
+    }
+  | { type: 'USER_SIGNIN'; payload: User }
+  | { type: 'USER_SIGNOUT' };
 
 type Context = {
   state: State;
@@ -18,6 +24,12 @@ type Context = {
     quantity: number
   ) => Promise<void>;
   removeCartItemHandler: (item: CartItem) => void;
+  signInHandler: (
+    email: string,
+    password: string,
+    callback: () => void
+  ) => Promise<void>;
+  signOutHandler: () => void;
 };
 
 const Store = createContext<Context>(undefined!);
@@ -46,19 +58,29 @@ const reducer = (state: State, action: Action) => {
       setLocalCartItems(newCartItems);
       return { ...state, cart: { ...state.cart, cartItems: newCartItems } };
     }
+    case 'USER_SIGNIN': {
+      return { ...state, user: action.payload };
+    }
+    case 'USER_SIGNOUT': {
+      return { ...state, user: null };
+    }
   }
 };
 
-const getLocalCartItems = () => {
-  const item = localStorage.getItem('cartItems');
-  return item ? item : '[]';
-};
+const getLocalCartItems = (): CartItem[] =>
+  JSON.parse(localStorage.getItem('cartItems') ?? '[]');
 
 const setLocalCartItems = (items: CartItem[]) =>
   localStorage.setItem('cartItems', JSON.stringify(items));
 
+const getLocalUser = (): User | null => {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+};
+
 const initialState: State = {
-  cart: { cartItems: JSON.parse(getLocalCartItems()) },
+  cart: { cartItems: getLocalCartItems() },
+  user: getLocalUser(),
 };
 
 export function StoreProvider({ children }: { children: ReactNode }) {
@@ -70,7 +92,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   ) => {
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      toast.error('Sorry. Product is out of stock');
       return;
     }
     dispatch({
@@ -83,7 +105,36 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
 
-  const value = { state, addOrUpdateCartItemHandler, removeCartItemHandler };
+  const signInHandler = async (
+    email: string,
+    password: string,
+    callback: () => void
+  ) => {
+    try {
+      const { data } = await axios.post('/api/users/signin', {
+        email,
+        password,
+      });
+      dispatch({ type: 'USER_SIGNIN', payload: data });
+      localStorage.setItem('user', JSON.stringify(data));
+      callback();
+    } catch (err) {
+      toast.error(getError(err));
+    }
+  };
+
+  const signOutHandler = () => {
+    dispatch({ type: 'USER_SIGNOUT' });
+    localStorage.removeItem('user');
+  };
+
+  const value = {
+    state,
+    addOrUpdateCartItemHandler,
+    removeCartItemHandler,
+    signInHandler,
+    signOutHandler,
+  };
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
 }

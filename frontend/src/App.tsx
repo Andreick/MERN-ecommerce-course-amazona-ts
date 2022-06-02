@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import { Badge, Container, Nav, Navbar } from 'react-bootstrap';
+import { Badge, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Store from './context/Store';
 import CartScreen from './screens/CartScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -10,12 +11,14 @@ import SigninScreen from './screens/SigninScreen';
 
 function App() {
   const {
-    state: { cart },
+    state: { cart, user },
+    signOutHandler,
   } = useContext(Store);
 
   return (
     <BrowserRouter>
       <div className="d-flex flex-column site-container">
+        <ToastContainer position="bottom-center" limit={1} />
         <header>
           <Navbar bg="dark" variant="dark">
             <Container>
@@ -34,6 +37,28 @@ function App() {
                     </Badge>
                   )}
                 </Link>
+                {user ? (
+                  <NavDropdown title={user.name} id="basic-nav-dropdown">
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>User Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/orderhistory">
+                      <NavDropdown.Item>Order History</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Divider />
+                    <Link
+                      className="dropdown-item"
+                      to="#signout"
+                      onClick={signOutHandler}
+                    >
+                      Sign Out
+                    </Link>
+                  </NavDropdown>
+                ) : (
+                  <Link className="nav-link" to="/signin">
+                    Sign In
+                  </Link>
+                )}
               </Nav>
             </Container>
           </Navbar>
