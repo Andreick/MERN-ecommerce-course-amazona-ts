@@ -62,7 +62,7 @@ const reducer = (state: State, action: Action) => {
       return { ...state, user: action.payload };
     }
     case 'USER_SIGNOUT': {
-      return { ...state, user: null };
+      return { ...state, user: null, cart: { cartItems: [] } };
     }
   }
 };
