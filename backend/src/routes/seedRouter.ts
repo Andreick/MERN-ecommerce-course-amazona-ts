@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import Product from '../models/productModel';
-import User from '../models/userModel';
+import Product from '../models/ProductModel';
+import User from '../models/UserModel';
 import sampleData from '../sampleData';
 
 const seedRouter = Router();

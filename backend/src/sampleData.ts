@@ -1,6 +1,6 @@
-import { IProduct } from './models/productModel';
+import { IProduct } from './models/ProductModel';
 import bcrypt from 'bcryptjs';
-import { IUser } from './models/userModel';
+import { IUser } from './models/UserModel';
 
 const sampleData = {
   users: [
