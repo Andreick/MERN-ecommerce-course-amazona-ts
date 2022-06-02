@@ -9,6 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductDetaisScreen';
 import ShippingAddressScreen from './screens/ShippingAddressScreen';
 import SigninScreen from './screens/SigninScreen';
+import SignupScreen from './screens/SignupScreen';
 
 function App() {
   const {
@@ -71,6 +72,7 @@ function App() {
               <Route path="/products/:slug" element={<ProductScreen />}></Route>
               <Route path="/cart" element={<CartScreen />}></Route>
               <Route path="/signin" element={<SigninScreen />}></Route>
+              <Route path="/signup" element={<SignupScreen />} />
               <Route
                 path="/shipping"
                 element={<ShippingAddressScreen />}

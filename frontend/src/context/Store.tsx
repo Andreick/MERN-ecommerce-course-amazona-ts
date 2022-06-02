@@ -14,7 +14,7 @@ type Action =
       type: 'CART_ADD_OR_UPDATE_ITEM' | 'CART_REMOVE_ITEM';
       payload: CartItem;
     }
-  | { type: 'USER_SIGNIN'; payload: User }
+  | { type: 'USER_SIGNIN' | 'USER_SIGNUP'; payload: User }
   | { type: 'USER_SIGNOUT' };
 
 type Context = {
@@ -27,6 +27,13 @@ type Context = {
   signInHandler: (
     email: string,
     password: string,
+    callback: () => void
+  ) => Promise<void>;
+  signUpHandler: (
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
     callback: () => void
   ) => Promise<void>;
   signOutHandler: () => void;
@@ -58,7 +65,8 @@ const reducer = (state: State, action: Action) => {
       setLocalCartItems(newCartItems);
       return { ...state, cart: { ...state.cart, cartItems: newCartItems } };
     }
-    case 'USER_SIGNIN': {
+    case 'USER_SIGNIN':
+    case 'USER_SIGNUP': {
       return { ...state, user: action.payload };
     }
     case 'USER_SIGNOUT': {
@@ -123,6 +131,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signUpHandler = async (
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+    callback: () => void
+  ) => {
+    try {
+      const { data } = await axios.post('/api/users/signup', {
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
+      dispatch({ type: 'USER_SIGNUP', payload: data });
+      localStorage.setItem('user', JSON.stringify(data));
+      callback();
+    } catch (err) {
+      toast.error(getError(err));
+    }
+  };
+
   const signOutHandler = () => {
     dispatch({ type: 'USER_SIGNOUT' });
     localStorage.removeItem('user');
@@ -133,6 +163,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addOrUpdateCartItemHandler,
     removeCartItemHandler,
     signInHandler,
+    signUpHandler,
     signOutHandler,
   };
 
