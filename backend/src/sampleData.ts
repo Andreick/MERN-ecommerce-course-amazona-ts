@@ -1,6 +1,22 @@
 import { IProduct } from './models/productModel';
+import bcrypt from 'bcryptjs';
+import { IUser } from './models/userModel';
 
 const sampleData = {
+  users: [
+    {
+      name: 'Andreick',
+      email: 'admin@example.com',
+      password: bcrypt.hashSync('123456'),
+      isAdmin: true,
+    },
+    {
+      name: 'John',
+      email: 'user@example.com',
+      password: bcrypt.hashSync('123456'),
+      isAdmin: false,
+    },
+  ] as IUser[],
   products: [
     {
       name: 'Nike Slim shirt',
